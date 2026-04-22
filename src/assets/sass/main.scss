@@ -1,0 +1,314 @@
+// @mixin body-text($size, $weight) {
+//   font-family:Inter, system-ui, sans-serif;
+//   font-size: #{$size}px;
+//   font-weight: #{$weight};
+//   line-height: #{$size + 8}px;
+// }
+
+// @for $size from 10 through 60 {
+//   @for $weight from 250 through 950 {
+//     .body-text-#{$size}-#{$weight} {
+//       @include body-text($size, $weight);
+//     }
+//   }
+// }
+
+.v-input {
+  position: relative !important;
+}
+
+.v-input__details {
+  position: absolute !important;
+  top: 100%; /* Inputun tam bittiği yerden başlasın */
+  margin-top: -9px;
+  left: 20px; /* Senin verdiğin margin-left */
+  width: 100%;
+  padding-inline: 0 !important;
+  z-index: 1;
+  pointer-events: none; /* Hata mesajının tıklamaları engellememesi için */
+}
+
+.v-input--density-comfortable,
+.v-input--density-default,
+.v-input--density-compact {
+  margin-bottom: 0 !important; 
+}
+
+/* assets/css/main.scss */
+
+/* 1. Genel Input Konteyner Ayarları (Height, Radius, Width) */
+.v-field {
+  border-radius: 12px !important; /* Radius 12px */
+  /* width: 400px !important;  <-- DİKKAT: Bunu aşağıda açıklayacağım, şimdilik yoruma aldım */
+  
+  /* Height 60px ve Padding ayarları */
+  --v-field-padding-top: 8px;
+  --v-field-padding-bottom: 8px;
+  --v-field-padding-start: 16px;
+  --v-field-padding-end: 16px;
+  
+  height: 55px !important;
+  display: flex;
+  align-items: center; /* İçeriği dikey ortala */
+}
+
+/* 2. Border Rengi ve Kalınlığı (#CFDDE6) */
+.v-field__outline {
+  --v-field-border-width: 1px !important;
+  --v-field-border-opacity: 1 !important;
+  color: #CFDDE6 !important; /* Normal border rengi */
+}
+
+/* 3. Input İçindeki Yazı Stili (Text Style) */
+.v-field__input {
+  font-family: 'Quicksand', sans-serif !important;
+  font-weight: 500 !important; /* Medium */
+  font-size: 14px !important;
+  line-height: 18px !important;
+  color: #024066 !important; /* Yazı rengi */
+  padding-top: 0 !important; /* Dikey ortalama için */
+  padding-bottom: 0 !important;
+  letter-spacing: 0 !important;
+}
+
+/* 4. Placeholder Stili */
+.v-field__input::placeholder {
+  font-family: 'Quicksand', sans-serif !important;
+  font-weight: 400 !important; /* Regular */
+  font-size: 14px !important;
+  line-height: 18px !important;
+  color: #808EA1 !important; /* Placeholder rengi */
+  opacity: 1 !important; /* Bazı tarayıcılar opacity düşürür, bunu engelliyoruz */
+}
+
+/* 5. Error (Hata) Durumu */
+.v-field--error:not(.v-field--disabled) .v-field__outline {
+  color: #E51838 !important; /* Error border rengi */
+}
+
+/* Hata Mesajı (Alttaki küçük yazı) */
+.v-messages__message {
+  font-family: 'Quicksand', sans-serif !important;
+  color: #E51838 !important;
+  line-height: 14px;
+  margin-top: 4px;
+}
+
+/* Label (Etiket) Rengi - Placeholder ile uyumlu olsun dersen */
+.v-label {
+  font-family: 'Quicksand', sans-serif !important;
+  color: #024066 !important;
+  font-size: 14px !important;
+  --v-medium-emphasis-opacity: 1 !important;
+}
+
+/* --- Dropdown Menü (Açılır Liste) Tasarımı --- */
+
+/* 1. Menü Kutusu (Dış Çerçeve) */
+.v-autocomplete__content,
+.v-select__content,
+.v-combobox__content {
+  border-radius: 12px !important;      /* Görseldeki ovallik */
+  border: 1px solid #CFDDE6 !important; /* Input ile aynı kenarlık rengi */
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.05) !important; /* Çok hafif gölge, tamamen flat olmasın diye */
+  margin-top: 8px !important;          /* Input ile menü arasındaki boşluk */
+  overflow: hidden;                    /* Köşelerin taşmasını engeller */
+  background-color: white !important;
+}
+
+/* 2. Liste Öğeleri (Seçenekler) */
+.v-list-item {
+  min-height: 40px !important; /* Satır yüksekliği */
+  padding-inline: 16px !important; /* Sağ-sol boşluk */
+}
+
+/* 3. Liste Yazı Stili */
+.v-list-item-title {
+  font-family: 'Quicksand', sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: #024066 !important; /* Yazı rengi */
+  line-height: 18px !important;
+}
+
+/* 4. Hover (Üzerine gelince) ve Focus Durumu */
+.v-list-item--active, /* Seçili olan */
+.v-list-item:hover {  /* Mouse ile üzerine gelinen */
+  background-color: #F0F4F8 !important; /* Açık mavi/gri bir ton */
+  color: #024066 !important;
+}
+
+/* Overlay'in içindeki padding'i sıfırla ki border düzgün görünsün */
+.v-list {
+  padding: 0 !important;
+}
+
+/* --- DARK MODE AYARLARI --- */
+/* Vuetify 'dark' temaya geçtiğinde body'ye veya container'a .v-theme--dark class'ı ekler. 
+   Biz de bu class'ı yakalayıp renkleri tersine çeviriyoruz. */
+
+.v-theme--dark {
+
+  /* 1. Input Border (Çerçeve) Rengi - Daha koyu, silik bir gri-mavi */
+  .v-field__outline {
+    color: #546E7A !important; 
+  }
+
+  /* 2. Input İçindeki Yazı - Okunabilmesi için beyaza yakın açık mavi */
+  .v-field__input {
+    color: #E1F5FE !important; 
+  }
+
+  /* 3. Placeholder (İpucu Yazısı) - Orta ton gri */
+  .v-field__input::placeholder {
+    color: #90A4AE !important;
+  }
+
+  /* --- Dropdown Menü (Dark Mode) --- */
+  
+  /* Menü Kutusu Arka Planı */
+  .v-autocomplete__content,
+  .v-select__content,
+  .v-combobox__content {
+    background-color: #1E293B !important; /* Koyu Slate Rengi (Modern Dark) */
+    border-color: #37474F !important;      /* Menü kenarlığı */
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.5) !important; /* Gölge daha belirgin */
+  }
+
+  /* Liste Yazı Rengi */
+  .v-list-item-title {
+    color: #E1F5FE !important; /* Input yazısıyla aynı */
+  }
+
+  /* Hover (Üzerine gelince) ve Seçili Durum */
+  .v-list-item--active, 
+  .v-list-item:hover {
+    background-color: #334155 !important; /* Hover olunca hafif aydınlansın */
+    color: #FFFFFF !important;
+  }
+  
+  /* Label (Etiket) Rengi */
+  .v-label {
+    color: #90A4AE !important;
+  }
+}
+
+/* assets/css/main.scss */
+
+/* 1. Kök Elementler ve Vuetify Uygulama Çerçevesi */
+html, body, .v-application {
+  font-family: 'Quicksand', sans-serif !important;
+  letter-spacing: 0px !important; /* Quicksand'de harf aralığı varsayılan iyidir, Vuetify bazen açar */
+}
+
+/* 2. Vuetify'ın Özel Typography Sınıfları (H1, H2, subtitle vb.) */
+/* Vuetify bazen Roboto'yu zorlayabilir, bunu engellemek için: */
+.v-typography,
+.text-h1, .text-h2, .text-h3, .text-h4, .text-h5, .text-h6,
+.text-subtitle-1, .text-subtitle-2,
+.text-body-1, .text-body-2,
+.text-button, .text-caption, .text-overline {
+  font-family: 'Quicksand', sans-serif !important;
+  letter-spacing: 0px !important; /* Quicksand'de harf aralığı varsayılan iyidir, Vuetify bazen açar */
+}
+
+/* 3. Butonlar, Chip'ler ve diğer bileşenler */
+.v-btn, .v-chip, .v-tab, .v-tooltip__content {
+  font-family: 'Quicksand', sans-serif !important;
+  letter-spacing: 0px !important; /* Quicksand'de harf aralığı varsayılan iyidir, Vuetify bazen açar */
+}
+
+/* --- v-textarea (Çok Satırlı Alan) Düzeltmesi --- */
+
+.v-textarea .v-field {
+  height: auto !important; /* 60px zorlamasını kaldırıyoruz */
+  min-height: 120px !important; /* En az bu kadar yüksek olsun (İsteğe göre değişebilir) */
+  align-items: flex-start !important; /* Yazıyı dikey ortalamak yerine en üste yasla */
+  
+  /* İç boşluk ayarları */
+  --v-field-padding-top: 16px !important;
+  --v-field-padding-bottom: 16px !important;
+}
+
+/* Textarea içindeki input alanı (Placeholder ve Yazılan Yazı) */
+.v-textarea .v-field__input {
+  padding-top: 5px !important; /* Zaten parent container'da padding verdik */
+  margin-top: 5px !important;
+  
+  /* Placeholder'ın kesilmesini önlemek için maskeyi kaldırıyoruz */
+  mask-image: none !important; 
+  -webkit-mask-image: none !important;
+}
+
+/* Textarea içindeki Placeholder Rengi (Garanti olsun diye tekrar tanımlıyoruz) */
+.v-textarea .v-field__input::placeholder {
+  color: #808EA1 !important;
+  opacity: 1 !important;
+  font-family: 'Quicksand', sans-serif !important;
+}
+
+
+
+/* --- TABLE INNER INPUT COMPACT STYLES --- */
+/* Tablo içindeki (th, td) tüm Vuetify inputlarını otomatik küçültür */
+
+th, td, .tdMobile {
+  
+  /* 1. Input Dış Çerçevesi (Kutu) */
+  .v-field {
+    height: 30px !important;       /* Global 55px'i eziyoruz, 30px yapıyoruz */
+    min-height: 30px !important;
+    border-radius: 6px !important; /* 12px table içinde çok yuvarlak durur, kıstık */
+    
+    /* İç boşlukları sıfırlayıp sıkıştırıyoruz */
+    --v-field-padding-top: 0px !important;
+    --v-field-padding-bottom: 0px !important;
+    --v-field-padding-start: 8px !important;
+    --v-field-padding-end: 8px !important;
+  }
+
+  /* 2. Yazı Alanı ve Fontu */
+  .v-field__input {
+    min-height: 30px !important; /* Kutu ile aynı boyda olsun */
+    height: 30px !important;
+    font-size: 13px !important;  /* Fontu bir tık küçülttük */
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    display: flex;
+    align-items: center;         /* Yazıyı dikey ortala */
+  }
+
+  /* 3. Placeholder (İpucu Yazısı) */
+  .v-field__input::placeholder {
+    font-size: 12px !important;  /* Placeholder daha kibar dursun */
+  }
+
+  /* 4. İkonlar (Sağdaki/Soldaki ikonlar) */
+  .v-field__append-inner,
+  .v-field__prepend-inner,
+  .v-field__clearable {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    align-items: center !important;
+    height: 100% !important;
+  }
+
+  .v-icon {
+    font-size: 18px !important; /* İkonları da küçültüyoruz (normalde 24px) */
+    opacity: 0.7;
+  }
+
+  /* 5. Label (Varsa Floating Label) */
+  .v-label.v-field-label {
+    font-size: 11px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+  }
+  
+  /* 6. Hata Mesajlarını Gizle (Opsiyonel) */
+  /* Tablo içinde yer dar olduğu için genelde hata mesajı alta yazılmaz,
+     border rengi kırmızı olur sadece. Mesaj yer kaplamasın diye: */
+  .v-input__details {
+    display: none !important; 
+  }
+}
