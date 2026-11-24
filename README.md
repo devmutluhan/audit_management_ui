@@ -7,6 +7,7 @@
 [![Vuetify](https://img.shields.io/badge/Vuetify-3.8-1867C0?style=for-the-badge&logo=vuetify&logoColor=white)](https://vuetifyjs.com/)
 [![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white)](https://getbootstrap.com/)
 [![License](https://img.shields.io/badge/Architecture-Enterprise_CQRS-blueviolet?style=for-the-badge)](#-mimari-ve-tasarım-prensipleri)
+[![Components](https://img.shields.io/badge/Design_System-Reusable_Components-success?style=for-the-badge)](#-yeniden-kullanılabilir-bileşen-mimarisi-reusable-components)
 [![SaaS](https://img.shields.io/badge/Platform-Multi--Tenant_SaaS-orange?style=for-the-badge)](#-multi-tenant--rbac-yetkilendirme-mimarisi)
 
 > **Bağımsız Denetim (Audit), YMM, SMMM ve Kurumsal Finansal Danışmanlık** şirketlerinin tüm iş süreçlerini regülasyonlara (KGK, BDS / ISA, Bağımsızlık Standartları) tam uyumlu şekilde dijitalleştiren, **Multi-Tenant SaaS** mimarisine sahip, kurumsal ölçekli bir **ERP (Enterprise Resource Planning)** platformudur.
@@ -22,6 +23,7 @@
   - [3. Claims-Based RBAC ve Dinamik Rota Güvenliği](#3-claims-based-rbac-ve-dinamik-rota-güvenliği)
   - [4. Resilient Network & Silent Token Refresh Hattı](#4-resilient-network--silent-token-refresh-hattı)
 - [Mimari Veri Akış Şeması](#-mimari-veri-akış-şeması)
+- [🧩 Yeniden Kullanılabilir Bileşen (Reusable Component) Mimarisi](#-yeniden-kullanılabilir-bileşen-reusable-component-mimarisi)
 - [Klasör ve Dosya Yapısı](#-klasör-ve-dosya-yapısı)
 - [Denetim Sektörüne Özel Domain Yetenekleri](#-denetim-sektörüne-özel-domain-yetenekleri)
 - [Teknoloji Yığını](#-teknoloji-yığını)
@@ -98,7 +100,7 @@ Yetkilendirme sistemi iki kademeli bir süzgeç mekanizmasıyla çalışır:
 
 ```mermaid
 flowchart TD
-    subgraph UI_Layer["UI & Sunum Katmanı (Vue 3 + Vuetify + Bootstrap)"]
+    subgraph UI_Layer["UI & Sunum Katmanı (Vue 3 + Reusable Components)"]
         View["Views / Pages"]
         Components["Dinamik Bileşenler & Sihirbazlar"]
     end
@@ -142,6 +144,20 @@ flowchart TD
     TokenInterceptor -- 401 Hatası --> RefreshQueue
     RefreshQueue --> API
 ```
+
+---
+
+## 🧩 Yeniden Kullanılabilir Bileşen (Reusable Component) Mimarisi
+
+Proje genelinde kod tekrarını (DRY) önlemek, arayüz tutarlılığını korumak ve modülerliği artırmak amacıyla birçok alanda **Reusable Component** yapısı kullanılmıştır:
+
+- **Dinamik Veri Tabloları:** Slot tünelleme ve otomatik mobil/masaüstü responsive desteğine sahip ortak grid yapısı kullanılmıştır *(Örnek: `KTDataTable.vue`, `VuetifyTable.vue`)*.
+- **Kapsayıcı Modal Yönetimi:** Tüm CRUD ve detay pop-up'ları için iki yönlü reaktif bağlamaya (`v-model`) sahip standart modal container kullanılmıştır *(Örnek: `VDialogContent.vue`)*.
+- **Domain-Spesifik Akıllı Girdiler:** Kendi içinde API araması, lazy-loading, avatar ve pozisyon bilgisini yöneten hazır seçim bileşenleri kullanılmıştır *(Örnek: `EmployeeSelectInput.vue`, `CustomerSelectInput.vue`, `VacationTypeSelectInput.vue`)*.
+- **Standart Form Elemanları:** Kurumsal tema ve validasyon kurallarını standartlaştıran ortak atomik girdiler kullanılmıştır *(Örnek: `TextField.vue`, `DateInput.vue`, `FileInput.vue`, `SwitchInput.vue`)*.
+- **Çok Adımlı Form Sihirbazı:** Teklif ve değerlendirme süreçleri için dinamik adımları yöneten stepper motoru kullanılmıştır *(Örnek: `CreateHorizontalWizardStepper.vue`)*.
+- **Teleport Tabanlı Düzen İletişimi:** Sayfa içi aksiyon ve butonları ana layout başlığına ışınlayan köprü bileşenleri kullanılmıştır *(Örnek: `PageTitleTeleport.vue`, `PageTabsTeleport.vue`)*.
+- **Modüler Özet ve Bilgi Kartları:** Farklı sayfalarda ortak DTO modellerini görselleştiren bağımsız kartlar kullanılmıştır *(Örnek: `ProjectCostSummaryForEmployeeCard.vue`, `ProjectTimeDistributionCard.vue`, `FamilyInfoCard.vue`)*.
 
 ---
 
@@ -190,12 +206,13 @@ audit_management_ui/
 │   │   ├── auth.ts             # Oturum, Multi-Tenant PreLogin, Yetki store'u
 │   │   └── theme.ts / config.ts# Tema ve arayüz yapılandırması
 │   │
-│   ├── components/             # Yeniden kullanılabilir atomik/moleküler UI bileşenleri
-│   │   ├── cards/              # Proje maliyet, timesheet, çalışan özet kartları
-│   │   ├── dialogs/            # Modal pencereler (Zaman girişi, onaylama vb.)
-│   │   ├── formInput/          # Standartlaştırılmış form giriş bileşenleri
-│   │   ├── kt-datatable/       # Sıralanabilir, sayfalanabilir kurumsal veri tabloları
-│   │   └── wizards/            # Çok adımlı sihirbazlar (Teklif Oluşturma Adımları)
+│   ├── components/             # Reusable (Yeniden Kullanılabilir) Bileşen Kütüphanesi
+│   │   ├── cards/              # Domain özet kartları (Cost Summary, Time Distribution)
+│   │   ├── dialogs/            # Standart VDialogContent ve işlem pencereleri
+│   │   ├── formInput/          # Atomik form girdileri & akıllı domain select bileşenleri
+│   │   ├── kt-datatable/       # Çift yönlü slot tünellemeli responsive veri tablosu
+│   │   ├── teleports/          # Sayfa başlık ve aksiyon ışınlayıcıları (Teleport)
+│   │   └── wizards/            # Dinamik adımlı form sihirbazları
 │   │
 │   ├── layouts/                # Sayfa iskeletleri
 │   │   ├── default-layout/     # Ana sistem dashboard layout'u (Sidebar, Header, Footer)
@@ -309,7 +326,7 @@ Bağımsız denetim regülasyonları uyarınca, denetçinin tarafsızlığını 
 ## 💡 Mühendislik Yaklaşımı ve Best Practices
 
 - **Strict Type Checking:** `vue-tsc --noEmit` ile derleme öncesi sıfır hata toleranslı statik tip denetimi.
-- **Component Decoupling:** Sayfa bileşenleri (Views) ile iş mantığı (Business Logic) Pinia store'ları ve composable yardımcılar üzerinden izole edilmiştir.
+- **Component Decoupling & DRY:** Ortak tablo, form girdileri ve modal bileşenleri sayesinde kod tekrarı engellenmiş, atomik ve tek sorumluluklu (Single Responsibility) bileşen tasarımı benimsenmiştir.
 - **Performans Optimizasyonu:** Route bazlı Lazy Loading (`import()`), sanallaştırılmış veri tabloları ve optimize edilmiş SCSS asset paketlemesi.
 - **Defensive Error Handling:** HTTP seviyesinde global hata yönetimi, kullanıcı dostu toast/modal bildirimleri (`ErrorStatusResult`) ve session-tabanlı failed request izleme mekanizması.
 
