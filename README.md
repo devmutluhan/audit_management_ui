@@ -276,53 +276,6 @@ Bağımsız denetim regülasyonları uyarınca, denetçinin tarafsızlığını 
 | **Uluslararasılaştırma** | [Vue I18n](https://vue-i18n.intlify.dev/) (Çok dilli altyapı desteği) |
 | **Kod Kalitesi** | ESLint, Prettier, Vue-TSC |
 
----
-
-## 🚀 Kurulum ve Yerel Çalıştırma
-
-### Gereksinimler
-- **Node.js:** `>= 18.x`
-- **Yarn** veya **npm**
-
-### Adımlar
-
-1. **Depoyu Klonlayın:**
-   ```bash
-   git clone https://github.com/kullanici-adiniz/audit-management-ui.git
-   cd audit-management-ui
-   ```
-
-2. **Bağımlılıkları Yükleyin:**
-   ```bash
-   yarn install
-   # veya
-   npm install
-   ```
-
-3. **Ortam Değişkenlerini Tanımlayın:**
-   Kök dizindeki `.env` dosyasını yapılandırın:
-   ```env
-   VITE_APP_API_URL=https://api.yourdomain.com/api
-   VITE_APP_BASE_URL=https://app.yourdomain.com
-   ```
-
-4. **Geliştirme Sunucusunu Başlatın:**
-   ```bash
-   yarn dev
-   # veya
-   npm run dev
-   ```
-   Tarayıcınızda `http://localhost:5173` adresini açarak uygulamayı test edebilirsiniz.
-
-5. **Üretim (Production) Derlemesi:**
-   ```bash
-   yarn build
-   # veya
-   npm run build
-   ```
-
----
-
 ## 💡 Mühendislik Yaklaşımı ve Best Practices
 
 - **Strict Type Checking:** `vue-tsc --noEmit` ile derleme öncesi sıfır hata toleranslı statik tip denetimi.
